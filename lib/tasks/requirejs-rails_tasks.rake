@@ -105,10 +105,14 @@ OS X Homebrew users can use 'brew install node'.
       requirejs.config.source_dir.mkpath
       requirejs.env.each_logical_path do |logical_path|
         next unless requirejs.config.asset_allowed?(logical_path)
-        if asset = requirejs.env.find_asset(logical_path)
-          filename = requirejs.config.source_dir + asset.logical_path
-          filename.dirname.mkpath
-          asset.write_to(filename)
+        begin
+          if asset = requirejs.env.find_asset(logical_path)
+            filename = requirejs.config.source_dir + asset.logical_path
+            filename.dirname.mkpath
+            asset.write_to(filename)
+          end
+        rescue => e
+          puts "== Failed to open asset: #{logical_path}"
         end
       end
     end
